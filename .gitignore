@@ -1,0 +1,9 @@
+.idea/*
+venv/*
+*.pyc
+.env
+.venv
+dist/*
+.coverage
+backend/.idea/*
+frontend/.idea/*
