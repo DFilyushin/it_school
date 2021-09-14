@@ -28,3 +28,19 @@ class QuizStudent(BaseModel):
     test_kind: int
     assessment: int
     results: List[QuizProcess]
+
+
+class Achievement(BaseModel):
+    """Достижения"""
+    code: UUID
+    name: str
+    weight: int
+
+
+class StudentAchieve(BaseModel):
+    """Достижения студентов"""
+    student_id: UUID
+    teacher_id: UUID
+    plan_id: UUID
+    achievement_id: UUID
+    created: datetime
