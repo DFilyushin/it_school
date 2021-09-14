@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Header
+from fastapi import APIRouter
 from uuid import UUID
 from datetime import datetime
 
-from sapp.models.student import StudentModel
+from sapp.models import SchoolClass
 from sapp.repositories.school_class_repository import SchoolClassRepository
-from sapp.serializers.student import StudentSerializer
+from sapp.serializers import SchoolClassSerializer
 
 
 class SchoolClassController:
@@ -26,15 +26,15 @@ class SchoolClassController:
             return model.dict()
 
         @self.router.post('/class/', name='Create new class')
-        async def new_school_class(student: StudentSerializer):
-            student_dob = datetime.combine(student.dob, datetime.min.time())
-            new_student = StudentModel(
-                first_name=student.first_name,
-                last_name=student.last_name,
-                patronymic=student.middle_name,
-                dob=student_dob
-            )
-            await self.repository.new_student(new_student)
+        async def new_school_class(school_class: SchoolClassSerializer):
+            new_school_class = SchoolClass(
+                class_num=school_class.class_num,
+                class_name=school_class.class_name,
+                edu_start=datetime.combine(school_class.edu_start, datetime.min.time()),
+                edu_finish=datetime.combine(school_class.edu_finish, datetime.min.time()),
+                teacher=school_class.teacher,
+                students=school_class.students)
+            await self.repository.new_school_class(new_school_class)
 
         @self.router.delete('/class/{id}', name='Delete school class by id')
         async def delete_school_class(id: UUID):

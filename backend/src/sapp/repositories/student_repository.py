@@ -24,7 +24,7 @@ class StudentRepository(BaseMongoRepository):
         await self.add_data(student.dict())
         return student
 
-    async def get_students(self, by_class: Optional[UUID]) -> Optional[List[StudentModel]]:
+    async def get_students(self, by_class: Optional[UUID] = None) -> Optional[List[StudentModel]]:
         result = []
         criteria = {}
         if by_class:

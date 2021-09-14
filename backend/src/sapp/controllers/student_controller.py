@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Header
+from fastapi import APIRouter
 from uuid import UUID
 from datetime import datetime
 
