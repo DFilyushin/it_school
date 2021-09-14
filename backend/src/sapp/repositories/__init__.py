@@ -1,0 +1,3 @@
+from sapp.repositories.student_repository import StudentRepository
+from sapp.repositories.teacher_repository import TeacherRepository
+from sapp.repositories.school_class_repository import SchoolClassRepository

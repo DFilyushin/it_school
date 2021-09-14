@@ -5,7 +5,7 @@ from sapp.connectors.abstract_connector import ConnectionManager
 
 
 @dataclass
-class MongoDBConnectionManager(ConnectionManager):
+class MongoDBConnector(ConnectionManager):
     settings: Settings
 
     def __post_init__(self) -> None:

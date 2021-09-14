@@ -11,6 +11,7 @@ injector = "^0.18.4"
 motor = "^2.5.1"
 uvicorn = "^0.15.0"
 pydantic = {extras = ["dotenv"], version = "^1.8.2"}
+fastapi-utils = "^0.2.1"
 
 [tool.poetry.dev-dependencies]
 
