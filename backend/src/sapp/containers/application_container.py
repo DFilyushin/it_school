@@ -4,6 +4,7 @@ from injector import singleton, provider
 from sapp.connectors.mongo_connector import MongoDBConnector
 from sapp.core.container import BaseApplicationContainer
 from sapp.settings import Settings
+from sapp.services.student_service import StudentService
 from sapp.controllers import StudentController, SchoolClassController, TeacherController, EducationSubjectController, \
     UserController, QuizController, EducationController
 from sapp.repositories import StudentRepository, SchoolClassRepository, TeacherRepository, SubjectRepository, \
@@ -30,8 +31,15 @@ class ApplicationContainer(BaseApplicationContainer):
 
     @singleton
     @provider
-    def provide_student_controller(self, repository: StudentRepository) -> StudentController:
-        return StudentController(repository)
+    def provide_student_controller(
+            self,
+            repository: StudentRepository,
+            teacher: TeacherRepository,
+            achievement: AchievementRepository,
+            education_plan_repository: EducationPlanRepository,
+            subject_repository: SubjectRepository
+    ) -> StudentController:
+        return StudentController(repository, teacher, achievement, education_plan_repository, subject_repository)
 
     @singleton
     @provider
@@ -131,3 +139,8 @@ class ApplicationContainer(BaseApplicationContainer):
             achievement: AchievementRepository
     ) -> EducationController:
         return EducationController(topic, plan, achievement)
+
+    @singleton
+    @provider
+    def provide_student_service(self) -> StudentService:
+        return StudentService()
