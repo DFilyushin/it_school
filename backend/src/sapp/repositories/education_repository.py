@@ -51,6 +51,15 @@ class EducationPlanRepository(BaseMongoRepository):
             raise DataNotFoundError(message=f'Plan with id {id} not found')
         return EducationPlanModel(**model)
 
+    async def get_plan_by_topic(self, id_topic: UUID) -> EducationPlanModel:
+        criteria = {
+            'topics.id': id_topic
+        }
+        model = await self.get_data(criteria_dict=criteria)
+        if not model:
+            raise DataNotFoundError(message=f'Plan not found')
+        return EducationPlanModel(**model)
+
     async def delete_plan(self, id: UUID):
         await self.delete_data({'id': id})
 
