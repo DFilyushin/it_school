@@ -63,7 +63,7 @@ class StudentRepository(BaseMongoRepository):
                     created=item.created
                 )
             )
-            return result
+        return result
 
     async def new_achievement(self, student_id: UUID, teacher_id: UUID, achieve_id: UUID, plan_id: UUID):
         new_object = StudentAchieveModel(
@@ -77,21 +77,26 @@ class StudentRepository(BaseMongoRepository):
     async def delete_achievement(self, student_id: UUID, id: UUID):
         await self.remove_item_from_array({'id': student_id}, 'achievements', {'id': id})
 
-    async def get_assessments(self, student_id: UUID, year: Optional[int], topic: Optional[UUID]) -> List[TopicAssessmentModel]:
+    async def get_assessments(self, student_id: UUID, year: Optional[int] = None, topic: Optional[UUID] = None) -> List[
+        TopicAssessmentModel]:
         result = []
         student = await self.get_student(student_id)
         for item in student.assessments:
             if topic:
                 if item.topic_id != topic:
                     continue
+            if year:
+                if item.created.year != year:
+                    continue
             result.append(
                 TopicAssessmentModel(
                     id=item.id,
                     topic_id=item.topic_id,
+                    teacher_id=item.teacher_id,
                     created=item.created,
                     value=item.value)
             )
-            return result
+        return result
 
     async def new_assessment(self, student_id: UUID, teacher_id: UUID, topic_id: UUID, value: int):
         new_object = TopicAssessmentModel(
@@ -104,3 +109,16 @@ class StudentRepository(BaseMongoRepository):
 
     async def delete_assessment(self, student_id: UUID, id: UUID):
         await self.remove_item_from_array({'id': student_id}, 'assessments', {'id': id})
+
+    async def update_assessment(self, student_id: UUID, assessment_id: UUID, new_value: int):
+        criteria = {
+            'id': student_id
+        }
+        array_filter = [
+            {'i.id': assessment_id}
+        ]
+        data = {
+            'assessments.$[i].value': new_value,
+        }
+
+        await self.update_data(criteria, data, array_filter)

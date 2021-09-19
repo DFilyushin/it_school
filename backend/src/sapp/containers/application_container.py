@@ -37,9 +37,17 @@ class ApplicationContainer(BaseApplicationContainer):
             teacher: TeacherRepository,
             achievement: AchievementRepository,
             education_plan_repository: EducationPlanRepository,
-            subject_repository: SubjectRepository
+            subject_repository: SubjectRepository,
+            topic_repository: EducationTopicRepository
     ) -> StudentController:
-        return StudentController(repository, teacher, achievement, education_plan_repository, subject_repository)
+        return StudentController(
+            repository,
+            teacher,
+            achievement,
+            education_plan_repository,
+            subject_repository,
+            topic_repository
+        )
 
     @singleton
     @provider
