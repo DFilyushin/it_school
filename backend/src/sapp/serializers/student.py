@@ -5,8 +5,8 @@ from datetime import date
 
 
 class StudentSerializer(BaseModel):
-    code: Optional[UUID]
+    id: Optional[UUID]
     first_name: str
     last_name: str
-    middle_name: str
+    patronymic: str
     dob: date
