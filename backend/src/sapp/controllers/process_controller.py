@@ -3,13 +3,13 @@ from uuid import UUID
 from datetime import datetime
 
 from sapp.models.teacher import TeacherModel
-from sapp.repositories import TeacherRepository
+from sapp.repositories import ProcessRepository
 from sapp.serializers import TeacherSerializer
 
 
-class TeacherController:
+class ProcessController:
 
-    def __init__(self, repository: TeacherRepository) -> None:
+    def __init__(self, repository: ProcessRepository) -> None:
         self.router = APIRouter()
         self.repository = repository
         self._register_routes()

@@ -1,4 +1,7 @@
 from sapp.controllers.student_controller import StudentController
 from sapp.controllers.teacher_controller import TeacherController
 from sapp.controllers.school_class_controller import SchoolClassController
-
+from sapp.controllers.education_subject_controller import EducationSubjectController
+from sapp.controllers.users_controller import UserController
+from sapp.controllers.quiz_controller import QuizController
+from sapp.controllers.education_controller import EducationController

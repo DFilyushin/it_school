@@ -27,14 +27,14 @@ class SchoolClassController:
 
         @self.router.post('/class/', name='Create new class')
         async def new_school_class(school_class: SchoolClassSerializer):
-            new_school_class = SchoolClass(
+            new_class_object = SchoolClass(
                 class_num=school_class.class_num,
                 class_name=school_class.class_name,
                 edu_start=datetime.combine(school_class.edu_start, datetime.min.time()),
                 edu_finish=datetime.combine(school_class.edu_finish, datetime.min.time()),
                 teacher=school_class.teacher,
                 students=school_class.students)
-            await self.repository.new_school_class(new_school_class)
+            await self.repository.new_school_class(new_class_object)
 
         @self.router.delete('/class/{id}', name='Delete school class by id')
         async def delete_school_class(id: UUID):
