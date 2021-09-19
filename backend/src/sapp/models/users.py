@@ -1,11 +1,17 @@
+from sapp.core.classes import ExtendedEnum
 from typing import List
 from pydantic import BaseModel, Field
 from datetime import datetime
 from uuid import UUID
 
 
+class Groups(ExtendedEnum):
+    ADMIN = 'ADMIN'
+    TEACHER = 'TEACHER'
+    STUDENT = 'STUDENT'
+
+
 class GroupModel(BaseModel):
-    code: UUID
     name: str
 
 

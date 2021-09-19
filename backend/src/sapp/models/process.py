@@ -1,7 +1,7 @@
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel, Field
 from datetime import datetime
-from uuid import UUID
+from uuid import UUID, uuid4
 
 
 class TopicAssessment(BaseModel):
@@ -30,14 +30,14 @@ class QuizStudent(BaseModel):
     results: List[QuizProcess]
 
 
-class Achievement(BaseModel):
+class AchievementModel(BaseModel):
     """Достижения"""
-    code: UUID
+    id: Optional[UUID] = Field(default_factory=uuid4)
     name: str
     weight: int
 
 
-class StudentAchieve(BaseModel):
+class StudentAchieveModel(BaseModel):
     """Достижения студентов"""
     student_id: UUID
     teacher_id: UUID
