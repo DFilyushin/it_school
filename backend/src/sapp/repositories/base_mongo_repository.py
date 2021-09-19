@@ -2,6 +2,7 @@ import asyncio
 from dataclasses import dataclass
 from typing import Optional, List, Iterable, Dict
 from sapp.connectors.mongo_connector import MongoDBConnector
+from sapp.core.listener_mixins import StartupListenerMixin
 from sapp.settings import Settings
 from pymongo import ASCENDING
 
@@ -10,15 +11,18 @@ from pymongo import ASCENDING
 class IndexDef:
     field_name: str
     sort: int = ASCENDING
+    unique: bool = False
 
 
-@dataclass
-class BaseMongoRepository:
-    connection_manager: MongoDBConnector
-    settings: Settings
+class BaseMongoRepository(StartupListenerMixin):
 
-    def __post_init__(self):
+    def __init__(self, connection_manager: MongoDBConnector, settings: Settings):
+        self.connection_manager = connection_manager
+        self.settings = settings
         self.database = self.settings.mongodb_database
+
+    async def run_startup(self) -> None:
+        self.create_indexes()
 
     @property
     def collection_name(self) -> str:
@@ -36,25 +40,27 @@ class BaseMongoRepository:
         """
         raise NotImplementedError
 
-    async def create_index(self, field_name: str, sort_id: int) -> None:
+    async def create_index(self, field_name: str, sort_id: int, unique: bool = False) -> None:
         """
         Create index
+        :param unique:
         :param field_name:
         :param sort_id:
         :return:
         """
         connection = await self.connection_manager.get_connection_async()
         collection = connection[self.database][self.collection_name]
-        await collection.create_index([(field_name, sort_id), ], background=True)
+        await collection.create_index([(field_name, sort_id), ], background=True, unique=unique)
 
     def create_indexes(self) -> None:
         """
         Create indexes async
         :return:
         """
+        loop = asyncio.get_running_loop()
         tasks = []
         for index_item in self.collection_indexes:
-            tasks.append(self.create_index(index_item.field_name, index_item.sort))
+            tasks.append(self.create_index(index_item.field_name, index_item.sort, index_item.unique))
         asyncio.ensure_future(asyncio.gather(*tasks))
 
     async def get_data(self, criteria_dict: dict) -> Optional[dict]:
