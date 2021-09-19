@@ -4,8 +4,11 @@ from injector import singleton, provider
 from sapp.connectors.mongo_connector import MongoDBConnector
 from sapp.core.container import BaseApplicationContainer
 from sapp.settings import Settings
-from sapp.controllers import StudentController, SchoolClassController, TeacherController
-from sapp.repositories import StudentRepository, SchoolClassRepository, TeacherRepository
+from sapp.controllers import StudentController, SchoolClassController, TeacherController, EducationSubjectController, \
+    UserController, QuizController, EducationController
+from sapp.repositories import StudentRepository, SchoolClassRepository, TeacherRepository, SubjectRepository, \
+    UserRepository, GroupRepository, QuizRepository, QuizQuestionRepository, EducationPlanRepository, \
+    EducationTopicRepository, AchievementRepository
 
 
 class ApplicationContainer(BaseApplicationContainer):
@@ -54,3 +57,77 @@ class ApplicationContainer(BaseApplicationContainer):
     @provider
     def provide_school_class_repository(self, connector: MongoDBConnector, settings: Settings) -> SchoolClassRepository:
         return SchoolClassRepository(connector, settings)
+
+    @singleton
+    @provider
+    def provide_subject_controller(self, repository: SubjectRepository) -> EducationSubjectController:
+        return EducationSubjectController(repository)
+
+    @singleton
+    @provider
+    def provide_subject_repository(self, connector: MongoDBConnector, settings: Settings) -> SubjectRepository:
+        return SubjectRepository(connector, settings)
+
+    @singleton
+    @provider
+    def provide_user_repository(self, connector: MongoDBConnector, settings: Settings) -> GroupRepository:
+        return GroupRepository(connector, settings)
+
+    @singleton
+    @provider
+    def provide_group_repository(self, connector: MongoDBConnector, settings: Settings) -> UserRepository:
+        return UserRepository(connector, settings)
+
+    @singleton
+    @provider
+    def provide_user_controller(self, users: UserRepository, groups: GroupRepository) -> UserController:
+        return UserController(users, groups)
+
+    @singleton
+    @provider
+    def provide_quiz_repository(self, connector: MongoDBConnector, settings: Settings) -> QuizRepository:
+        return QuizRepository(connector, settings)
+
+    @singleton
+    @provider
+    def provide_quiz_question_repository(self, connector: MongoDBConnector,
+                                         settings: Settings) -> QuizQuestionRepository:
+        return QuizQuestionRepository(connector, settings)
+
+    @singleton
+    @provider
+    def provide_quiz_controller(self, quiz: QuizRepository, quiz_question: QuizQuestionRepository) -> QuizController:
+        return QuizController(quiz, quiz_question)
+
+    @singleton
+    @provider
+    def provide_education_plan_repository(self, connector: MongoDBConnector,
+                                          settings: Settings) -> EducationPlanRepository:
+        return EducationPlanRepository(connector, settings)
+
+    @singleton
+    @provider
+    def provide_education_achievement_repository(
+            self, connector: MongoDBConnector,
+            settings: Settings
+    ) -> AchievementRepository:
+        return AchievementRepository(connector, settings)
+
+    @singleton
+    @provider
+    def provide_education_topic_repository(
+            self,
+            connector: MongoDBConnector,
+            settings: Settings
+    ) -> EducationTopicRepository:
+        return EducationTopicRepository(connector, settings)
+
+    @singleton
+    @provider
+    def provide_education_controller(
+            self,
+            topic: EducationTopicRepository,
+            plan: EducationPlanRepository,
+            achievement: AchievementRepository
+    ) -> EducationController:
+        return EducationController(topic, plan, achievement)
