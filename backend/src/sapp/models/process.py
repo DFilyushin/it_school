@@ -4,14 +4,6 @@ from datetime import datetime
 from uuid import UUID, uuid4
 
 
-class TopicAssessment(BaseModel):
-    """Оценки ученика за уроки по теме"""
-    topic_id: UUID
-    student_id: UUID
-    created: datetime
-    value: int
-
-
 class QuizProcess(BaseModel):
     """Ответы ученика в тесте"""
     question_id: UUID
@@ -35,12 +27,3 @@ class AchievementModel(BaseModel):
     id: Optional[UUID] = Field(default_factory=uuid4)
     name: str
     weight: int
-
-
-class StudentAchieveModel(BaseModel):
-    """Достижения студентов"""
-    student_id: UUID
-    teacher_id: UUID
-    plan_id: UUID
-    achievement_id: UUID
-    created: datetime
